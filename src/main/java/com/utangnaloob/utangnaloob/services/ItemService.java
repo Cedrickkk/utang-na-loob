@@ -35,7 +35,24 @@ public class ItemService {
     }
 
     public ItemResponseDTO getItemById(Long id) {
-        Item item = itemRepository.findById(id).orElseThrow(() -> new ItemNotFoundException("Item not found."));
+        Item item = itemRepository.findById(id)
+                .orElseThrow(() -> new ItemNotFoundException("Item not found."));
         return ItemMapper.toDto(item);
+    }
+
+    public ItemResponseDTO updateItemById(Long id, ItemRequestDTO itemRequestDTO) {
+        Item item = itemRepository.findById(id)
+                .orElseThrow(() -> new ItemNotFoundException("Item not found."));
+
+        item.setName(itemRequestDTO.getName());
+        item.setPrice(itemRequestDTO.getPrice());
+
+        Item updatedItem = itemRepository.save(item);
+
+        return ItemMapper.toDto(updatedItem);
+    }
+
+    public void deleteItemById(Long id) {
+        itemRepository.deleteById(id);
     }
 }

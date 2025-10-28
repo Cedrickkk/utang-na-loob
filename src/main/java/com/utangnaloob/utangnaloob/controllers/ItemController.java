@@ -29,7 +29,7 @@ public class ItemController {
                 "Item created successfully.",
                 responseDTO
         );
-        
+
         return ResponseEntity
                 .status(HttpStatus.CREATED)
                 .body(response);
@@ -61,5 +61,30 @@ public class ItemController {
         return ResponseEntity
                 .status(HttpStatus.FOUND)
                 .body(response);
+    }
+
+    @PutMapping("/items/{id}")
+    public ResponseEntity<SuccessResponse<ItemResponseDTO>> updateItemById(
+            @PathVariable Long id,
+            @RequestBody ItemRequestDTO itemRequestDTO) {
+        ItemResponseDTO updatedItem = itemService.updateItemById(id, itemRequestDTO);
+
+        SuccessResponse<ItemResponseDTO> response = new SuccessResponse<>(
+                HttpStatus.OK,
+                "Item updated successfully.",
+                updatedItem
+        );
+
+        return ResponseEntity
+                .status(HttpStatus.OK)
+                .body(response);
+    }
+
+    @DeleteMapping("/items/{id}")
+    public ResponseEntity<Void> deleteItemById(@PathVariable Long id) {
+        itemService.deleteItemById(id);
+        return ResponseEntity
+                .noContent()
+                .build();
     }
 }
