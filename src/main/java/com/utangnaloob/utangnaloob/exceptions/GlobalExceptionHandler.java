@@ -1,6 +1,7 @@
 package com.utangnaloob.utangnaloob.exceptions;
 
 import com.utangnaloob.utangnaloob.models.ErrorResponse;
+import com.utangnaloob.utangnaloob.models.FieldErrorResponse;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -8,27 +9,34 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<ErrorResponse<Map<String, String>>> handleValidationException(
+    public ResponseEntity<ErrorResponse<List<FieldErrorResponse>>> handleValidationException(
             MethodArgumentNotValidException ex) {
         Map<String, String> fieldErrors = new HashMap<>();
-        ex.getBindingResult()
-                .getFieldErrors()
-                .forEach(error -> fieldErrors.put(error.getField(), error.getDefaultMessage()));
 
-        ErrorResponse<Map<String, String>> errors = new ErrorResponse<>(
+        List<FieldErrorResponse> errors = ex.getBindingResult()
+                .getFieldErrors()
+                .stream()
+                .map(error -> new FieldErrorResponse(
+                        error.getField(),
+                        error.getDefaultMessage()
+                ))
+                .toList();
+
+        ErrorResponse<List<FieldErrorResponse>> errorsResponse = new ErrorResponse<>(
                 HttpStatus.BAD_REQUEST,
                 "Request failed due to invalid or missing fields.",
-                fieldErrors
+                errors
         );
 
         return ResponseEntity
                 .badRequest()
-                .body(errors);
+                .body(errorsResponse);
     }
 
     @ExceptionHandler(ItemNotFoundException.class)

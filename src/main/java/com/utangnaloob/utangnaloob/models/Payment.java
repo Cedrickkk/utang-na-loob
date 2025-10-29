@@ -1,7 +1,6 @@
 package com.utangnaloob.utangnaloob.models;
 
 import jakarta.persistence.*;
-import org.hibernate.annotations.CreationTimestamp;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -32,7 +31,6 @@ public class Payment extends BaseEntity {
     @Column(nullable = false)
     private BigDecimal balanceAfterPayment;
 
-    @CreationTimestamp
     private LocalDateTime paymentDate;
 
     public Long getId() {

@@ -10,14 +10,14 @@ public class ErrorResponse<T> {
     private final String error;
     private final String message;
     private final Timestamp timeStamp;
-    private final T details;
+    private final T errors;
 
-    public ErrorResponse(HttpStatus status, String message, T details) {
+    public ErrorResponse(HttpStatus status, String message, T errors) {
         this.status = status.value();
         this.error = status.getReasonPhrase();
         this.message = message;
         this.timeStamp = Timestamp.from(Instant.now());
-        this.details = details;
+        this.errors = errors;
     }
 
     public ErrorResponse(HttpStatus status, String message) {
@@ -40,7 +40,7 @@ public class ErrorResponse<T> {
         return timeStamp;
     }
 
-    public T getDetails() {
-        return details;
+    public T getErrors() {
+        return errors;
     }
 }
