@@ -4,9 +4,11 @@ import com.utangnaloob.utangnaloob.dtos.ItemRequestDTO;
 import com.utangnaloob.utangnaloob.dtos.ItemResponseDTO;
 import com.utangnaloob.utangnaloob.models.SuccessResponse;
 import com.utangnaloob.utangnaloob.services.ItemService;
+import jakarta.validation.groups.Default;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -22,17 +24,17 @@ public class ItemController {
     }
 
     @PostMapping("/items")
-    public ResponseEntity<SuccessResponse<ItemResponseDTO>> createItem(@RequestBody ItemRequestDTO itemRequestDTO) {
-        ItemResponseDTO responseDTO = itemService.createItem(itemRequestDTO);
+    public ResponseEntity<SuccessResponse<ItemResponseDTO>> createItem(
+            @Validated({Default.class})
+            @RequestBody ItemRequestDTO requestDTO) {
+        ItemResponseDTO responseDTO = itemService.createItem(requestDTO);
         SuccessResponse<ItemResponseDTO> response = new SuccessResponse<>(
                 HttpStatus.CREATED,
                 "Item created successfully.",
                 responseDTO
         );
 
-        return ResponseEntity
-                .status(HttpStatus.CREATED)
-                .body(response);
+        return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 
     @GetMapping("/items")
@@ -44,9 +46,7 @@ public class ItemController {
                 items
         );
 
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @GetMapping("/items/{id}")
@@ -54,20 +54,19 @@ public class ItemController {
         ItemResponseDTO itemResponseDTO = itemService.getItemById(id);
         SuccessResponse<ItemResponseDTO> response = new SuccessResponse<>(
                 HttpStatus.FOUND,
-                "Item successfully found.",
+                "Item found successfully.",
                 itemResponseDTO
         );
 
-        return ResponseEntity
-                .status(HttpStatus.FOUND)
-                .body(response);
+        return ResponseEntity.status(HttpStatus.FOUND).body(response);
     }
 
     @PutMapping("/items/{id}")
     public ResponseEntity<SuccessResponse<ItemResponseDTO>> updateItemById(
             @PathVariable Long id,
-            @RequestBody ItemRequestDTO itemRequestDTO) {
-        ItemResponseDTO updatedItem = itemService.updateItemById(id, itemRequestDTO);
+            @Validated({Default.class})
+            @RequestBody ItemRequestDTO requestDTO) {
+        ItemResponseDTO updatedItem = itemService.updateItemById(id, requestDTO);
 
         SuccessResponse<ItemResponseDTO> response = new SuccessResponse<>(
                 HttpStatus.OK,
@@ -75,16 +74,13 @@ public class ItemController {
                 updatedItem
         );
 
-        return ResponseEntity
-                .status(HttpStatus.OK)
-                .body(response);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
     }
 
     @DeleteMapping("/items/{id}")
     public ResponseEntity<Void> deleteItemById(@PathVariable Long id) {
         itemService.deleteItemById(id);
-        return ResponseEntity
-                .noContent()
-                .build();
+        
+        return ResponseEntity.noContent().build();
     }
 }

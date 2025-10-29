@@ -1,6 +1,7 @@
 package com.utangnaloob.utangnaloob.models;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -17,6 +18,14 @@ public class Debtor {
 
     private String name;
 
+    @Column(nullable = true)
+    private String email;
+
+    @NotNull
+    @Column(length = 20, nullable = false)
+    private String contactNumber;
+
+    @Embedded
     private Address address;
 
     @OneToMany(mappedBy = "debtor", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -30,6 +39,18 @@ public class Debtor {
     public void removeDebt(Debt debt) {
         this.debts.remove(debt);
         debt.setDebtor(this);
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getContactNumber() {
+        return contactNumber;
+    }
+
+    public void setContactNumber(String contactNumber) {
+        this.contactNumber = contactNumber;
     }
 
     public String getName() {
@@ -46,6 +67,14 @@ public class Debtor {
 
     public void setAddress(Address address) {
         this.address = address;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Set<Debt> getDebts() {

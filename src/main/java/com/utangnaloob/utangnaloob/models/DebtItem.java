@@ -27,7 +27,7 @@ public class DebtItem {
     @Column(nullable = false)
     private Integer quantity;
 
-    @Formula("unitPrice * quantity")
+    @Formula("unit_price * quantity")
     private BigDecimal lineTotal;
 
     public Debt getDebt() {

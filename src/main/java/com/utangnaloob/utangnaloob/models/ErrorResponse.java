@@ -2,17 +2,26 @@ package com.utangnaloob.utangnaloob.models;
 
 import org.springframework.http.HttpStatus;
 
-public class ErrorResponse {
+import java.sql.Timestamp;
+import java.time.Instant;
+
+public class ErrorResponse<T> {
     private final int status;
     private final String error;
     private final String message;
-    private final long timeStamp;
+    private final Timestamp timeStamp;
+    private final T details;
 
-    public ErrorResponse(HttpStatus status, String message) {
+    public ErrorResponse(HttpStatus status, String message, T details) {
         this.status = status.value();
         this.error = status.getReasonPhrase();
         this.message = message;
-        this.timeStamp = System.currentTimeMillis();
+        this.timeStamp = Timestamp.from(Instant.now());
+        this.details = details;
+    }
+
+    public ErrorResponse(HttpStatus status, String message) {
+        this(status, message, null);
     }
 
     public int getStatus() {
@@ -27,7 +36,11 @@ public class ErrorResponse {
         return message;
     }
 
-    public long getTimeStamp() {
+    public Timestamp getTimeStamp() {
         return timeStamp;
+    }
+
+    public T getDetails() {
+        return details;
     }
 }

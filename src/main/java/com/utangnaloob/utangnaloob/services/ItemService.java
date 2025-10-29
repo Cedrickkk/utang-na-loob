@@ -53,6 +53,9 @@ public class ItemService {
     }
 
     public void deleteItemById(Long id) {
-        itemRepository.deleteById(id);
+        Item item = itemRepository.findById(id)
+                .orElseThrow(() -> new ItemNotFoundException("Item not found."));
+
+        itemRepository.delete(item);
     }
 }

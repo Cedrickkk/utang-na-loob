@@ -8,7 +8,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-public class Debt {
+public class Debt extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "debt_id_seq_generator")
     @SequenceGenerator(
@@ -21,7 +21,7 @@ public class Debt {
     @JoinColumn(name = "debtor_id", nullable = false)
     private Debtor debtor;
 
-    @Formula("SELECT COALESCE(SUM(di.line_total), 0) FROM DebtItem di WHERE di.debt_id = id")
+    @Formula("(SELECT COALESCE(SUM(di.unit_price * di.quantity), 0) FROM debt_item di WHERE di.debt_id = id)")
     private BigDecimal originalAmount;
 
     @OneToMany(mappedBy = "debt", cascade = CascadeType.ALL, orphanRemoval = true)
@@ -33,7 +33,6 @@ public class Debt {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private DebtStatus status = DebtStatus.OUTSTANDING;
-
 
     public void addDebtItem(DebtItem debtItem) {
         this.debtItems.add(debtItem);
@@ -53,6 +52,33 @@ public class Debt {
     public void removePayment(Payment payment) {
         this.payments.remove(payment);
         payment.setDebt(null);
+    }
+
+    public BigDecimal getTotalPaid() {
+        if (this.payments == null || this.payments.isEmpty()) {
+            return BigDecimal.ZERO;
+        }
+
+        return this.payments.stream()
+                .map(payment -> payment.getPaymentAmount() != null
+                        ? payment.getPaymentAmount() : BigDecimal.ZERO)
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public BigDecimal getCurrentBalance() {
+        BigDecimal amountOwed = (this.originalAmount != null) ? this.originalAmount : BigDecimal.ZERO;
+        BigDecimal paid = getTotalPaid();
+        BigDecimal balance = amountOwed.subtract(paid);
+
+        if (balance.compareTo(BigDecimal.ZERO) < 0) {
+            return BigDecimal.ZERO;
+        }
+
+        return balance;
+    }
+
+    public Long getId() {
+        return id;
     }
 
     public Debtor getDebtor() {
@@ -93,5 +119,17 @@ public class Debt {
 
     public void setStatus(DebtStatus status) {
         this.status = status;
+    }
+
+    @Override
+    public String toString() {
+        return "Debt{" +
+                "id=" + id +
+                ", debtor=" + debtor +
+                ", originalAmount=" + originalAmount +
+                ", debtItems=" + debtItems +
+                ", payments=" + payments +
+                ", status=" + status +
+                '}';
     }
 }

@@ -18,6 +18,10 @@ public class SuccessResponse<T> {
         this.data = data;
     }
 
+    public static <T> SuccessResponse<T> of(HttpStatus status, String message, T data) {
+        return new SuccessResponse<>(status, message, data);
+    }
+
     public int getStatus() {
         return status;
     }
