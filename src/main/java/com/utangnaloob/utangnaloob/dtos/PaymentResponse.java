@@ -2,6 +2,7 @@ package com.utangnaloob.utangnaloob.dtos;
 
 import com.utangnaloob.utangnaloob.models.DebtStatus;
 import com.utangnaloob.utangnaloob.models.PaymentMethod;
+import com.utangnaloob.utangnaloob.models.PaymentStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -10,10 +11,10 @@ public class PaymentResponseDTO {
     private Long id;
     private Long debtId;
     private String debtorName;
-    private BigDecimal paymentAmount;
-    private PaymentMethod paymentMethod;
-    private LocalDateTime paymentDate;
-
+    private BigDecimal amount;
+    private PaymentMethod method;
+    private LocalDateTime date;
+    private PaymentStatus status;
     private BigDecimal newDebtBalance;
     private DebtStatus debtStatus;
 
@@ -44,28 +45,28 @@ public class PaymentResponseDTO {
         this.debtorName = debtorName;
     }
 
-    public BigDecimal getPaymentAmount() {
-        return paymentAmount;
+    public BigDecimal getAmount() {
+        return amount;
     }
 
-    public void setPaymentAmount(BigDecimal paymentAmount) {
-        this.paymentAmount = paymentAmount;
+    public void setAmount(BigDecimal amount) {
+        this.amount = amount;
     }
 
-    public PaymentMethod getPaymentMethod() {
-        return paymentMethod;
+    public PaymentMethod getMethod() {
+        return method;
     }
 
-    public void setPaymentMethod(PaymentMethod paymentMethod) {
-        this.paymentMethod = paymentMethod;
+    public void setMethod(PaymentMethod method) {
+        this.method = method;
     }
 
-    public LocalDateTime getPaymentDate() {
-        return paymentDate;
+    public LocalDateTime getDate() {
+        return date;
     }
 
-    public void setPaymentDate(LocalDateTime paymentDate) {
-        this.paymentDate = paymentDate;
+    public void setDate(LocalDateTime date) {
+        this.date = date;
     }
 
     public BigDecimal getNewDebtBalance() {
@@ -74,6 +75,14 @@ public class PaymentResponseDTO {
 
     public void setNewDebtBalance(BigDecimal newDebtBalance) {
         this.newDebtBalance = newDebtBalance;
+    }
+
+    public PaymentStatus getStatus() {
+        return status;
+    }
+
+    public void setStatus(PaymentStatus status) {
+        this.status = status;
     }
 
     public DebtStatus getDebtStatus() {

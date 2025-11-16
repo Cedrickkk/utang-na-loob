@@ -5,7 +5,7 @@ import com.utangnaloob.utangnaloob.models.Address;
 import java.util.HashSet;
 import java.util.Set;
 
-public class DebtorResponseDTO {
+public class DebtorResponse {
     private Long id;
     private String name;
     private String email;
@@ -13,7 +13,7 @@ public class DebtorResponseDTO {
     private Address address;
     private Set<DebtSummaryResponseDTO> debts = new HashSet<>();
 
-    public DebtorResponseDTO() {
+    public DebtorResponse() {
     }
 
     public Long getId() {

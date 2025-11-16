@@ -1,6 +1,7 @@
 package com.utangnaloob.utangnaloob.dtos;
 
 import com.utangnaloob.utangnaloob.models.DebtStatus;
+import com.utangnaloob.utangnaloob.models.PaymentStatus;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -8,6 +9,7 @@ import java.time.LocalDateTime;
 public class DebtResponseDTO {
     private Long id;
     private String debtorName;
+    private PaymentStatus status;
     private BigDecimal originalAmount;
     private BigDecimal currentBalance;
     private DebtStatus debtStatus;
